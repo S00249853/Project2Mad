@@ -1,5 +1,6 @@
 package com.example.project2mad
 
+import android.annotation.SuppressLint
 import android.icu.text.CaseMap
 import android.net.http.HeaderBlock
 import android.os.Bundle
@@ -29,57 +30,81 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.project2madapp.ContactScreen
+import com.example.project2madapp.CreateEditScreen
+import com.example.project2madapp.ScheduleScreen
+import com.example.project2madapp.TaskScreen
+import com.example.project2madapp.TasksScreen
 import com.example.project2madapp.ui.theme.Project2MadAppTheme
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Project2MadAppTheme() {
+val navController = rememberNavController()
+            Scaffold(
+                topBar = {TopUi("Daniel")},
+                content = {Navigation(navController)},
+                bottomBar = {
+                    BottomNavigationUi(navController)
+                }
+
+            )
+
 
 
 
                 }
             }
-        }
+
 
 
 }
-
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.size(400.dp)) {
-
-        Text(
-        text = "Hello $name!",
-        modifier = Modifier.background(Color.Red)
-            .padding(16.dp)
-            .background(Color.Green),
-        color = Color.Blue,
-        fontSize = 30.sp
-    )
-        Text(
-            text = "Hello $name!",
-            modifier = Modifier.background(Color.Red)
-                .padding(16.dp)
-                .background(Color.Green),
-            color = Color.Blue,
-            fontSize = 30.sp
-        )
-
+fun Navigation(navController: NavHostController){
+    NavHost(navController = navController, startDestination = "tasks"){
+        composable("home"){
+              HomeScreen()
+        }
+        composable("tasks"){
+            TasksScreen()
+        }
+        composable("schedule"){
+            ScheduleScreen()
+        }
+        composable("contact"){
+            ContactScreen()
+        }
+        composable("task"){
+        //    TaskScreen()
+        }
+        composable("create"){
+        //    CreateEditScreen()
+        }
     }
-
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
+    val navController = rememberNavController()
     Project2MadAppTheme()  {
-        HomeScreen()
+        Scaffold(
+            topBar = {TopUi("Daniel")},
+            content = {Navigation(navController)},
+            bottomBar = {
+                BottomNavigationUi(navController)
+            }
+
+        )
     }
 }
