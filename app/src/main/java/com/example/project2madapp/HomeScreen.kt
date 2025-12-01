@@ -1,4 +1,4 @@
-package com.example.project2mad
+package com.example.project2madapp
 
 import android.media.Image
 import android.widget.Button
@@ -39,7 +39,7 @@ fun HomeScreen() {
     Box(modifier = Modifier.fillMaxSize())
     {
         Column() {
-
+            TopUi()
         }
     }
 }

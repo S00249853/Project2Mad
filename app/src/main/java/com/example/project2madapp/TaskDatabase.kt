@@ -1,4 +1,4 @@
-package com.example.project2mad
+package com.example.project2madapp
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

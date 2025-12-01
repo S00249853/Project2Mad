@@ -1,23 +1,102 @@
 package com.example.project2madapp
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuBoxScope
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.project2mad.TopUi
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.room.Index
+import com.example.project2madapp.TopUi
 
 @Composable
-fun TasksScreen() {
+fun TasksScreen(
+    state: TaskState,
+    onEvent: (TaskEvent) -> Unit,
+    navController: NavController
+) {
     Box(modifier = Modifier.fillMaxSize())
     {
-        Column(verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("John")
+        Column() {
+            TopUi()
+            OrderSection(state, onEvent)
+            TaskList(state, navController)
         }
+
+
+
+        }
+    }
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun OrderSection(
+    state: TaskState,
+    onEvent: (TaskEvent) -> Unit
+)
+{
+    var isExpanded by remember{
+        mutableStateOf(false)
+    }
+
+    Row(horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(15.dp)
+    ) {
+        Text("Tasks", fontSize = 80.sp)
+        Button(onClick = { isExpanded = !isExpanded })
+        {
+            Text("Order")
+        }
+       DropdownMenu(expanded = isExpanded, onDismissRequest = {isExpanded = false})
+        {
+            SortType.values().forEach { sortType ->
+                DropdownMenuItem(text = {sortType.toString()},
+                    onClick = { onEvent(TaskEvent.SortTasks(sortType))})
+            }
+        }
+    }
+}
+
+@Composable
+fun TaskList(
+    state: TaskState,
+    navController: NavController
+)
+{
+    LazyColumn(modifier = Modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(state.tasks.size){
+            TaskItem(state.tasks[it])
+        }
+    }
+    Button(onClick =
+        {navController.navigate("create")}
+            ) {
+        Text("Add Task")
     }
 }

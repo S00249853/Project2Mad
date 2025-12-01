@@ -1,4 +1,4 @@
-package com.example.project2mad
+package com.example.project2madapp
 
 import androidx.room.Dao
 import androidx.room.Delete

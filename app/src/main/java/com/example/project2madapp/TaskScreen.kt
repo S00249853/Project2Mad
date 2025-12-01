@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.project2mad.Task
-import com.example.project2mad.TopUi
+import com.example.project2madapp.Task
+import com.example.project2madapp.TopUi
 
 @Composable
 fun TaskScreen(task: Task) {

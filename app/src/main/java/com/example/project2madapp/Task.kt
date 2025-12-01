@@ -1,4 +1,4 @@
-package com.example.project2mad
+package com.example.project2madapp
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

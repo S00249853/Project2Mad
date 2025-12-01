@@ -1,4 +1,4 @@
-package com.example.project2mad
+package com.example.project2madapp
 
 import android.annotation.SuppressLint
 import android.icu.text.CaseMap
@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.R
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +23,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,10 +33,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
+
 import com.example.project2madapp.ContactScreen
 import com.example.project2madapp.CreateEditScreen
 import com.example.project2madapp.ScheduleScreen
@@ -41,41 +48,54 @@ import com.example.project2madapp.TaskScreen
 import com.example.project2madapp.TasksScreen
 import com.example.project2madapp.ui.theme.Project2MadAppTheme
 
-class MainActivity : ComponentActivity() {
+public class MainActivity : ComponentActivity() {
+private  val  db by lazy{
+    Room.databaseBuilder(
+        applicationContext,
+        TaskDatabase::class.java,
+        "tasks.db"
+    ).build()
+}
+    private val viewModel by viewModels<TaskViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory{
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return TaskViewModel(db.dao) as T
+                }
+            }
+        }
+    )
+
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val state by viewModel.State.collectAsState()
 val navController = rememberNavController()
             Scaffold(
-                topBar = {TopUi("Daniel")},
-                content = {Navigation(navController)},
                 bottomBar = {
                     BottomNavigationUi(navController)
                 }
-
             )
-
-
-
-
+            {
+                Navigation(navController, state, viewModel::onEvent)
+            }
                 }
             }
-
-
-
 }
 
 @Composable
-fun Navigation(navController: NavHostController){
+fun Navigation(navController: NavHostController,
+               state: TaskState,
+               onEvent: (TaskEvent) -> Unit){
     NavHost(navController = navController, startDestination = "tasks"){
         composable("home"){
               HomeScreen()
         }
         composable("tasks"){
-            TasksScreen()
+            TasksScreen(state = state, onEvent = onEvent, navController = navController)
         }
         composable("schedule"){
             ScheduleScreen()
@@ -98,13 +118,6 @@ fun Navigation(navController: NavHostController){
 fun GreetingPreview() {
     val navController = rememberNavController()
     Project2MadAppTheme()  {
-        Scaffold(
-            topBar = {TopUi("Daniel")},
-            content = {Navigation(navController)},
-            bottomBar = {
-                BottomNavigationUi(navController)
-            }
-
-        )
+     // TasksScreen()
     }
 }

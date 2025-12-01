@@ -1,11 +1,10 @@
-package com.example.project2mad
+package com.example.project2madapp
 
 import java.sql.Time
 import java.time.DayOfWeek
 
 enum class SortType{
     Title,
-   // Time,
     Done
 }
 
