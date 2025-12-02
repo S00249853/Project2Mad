@@ -10,7 +10,7 @@ data class TaskState(
     val category: Categories = Categories.Cooking,
     val day: DayOfWeek = DayOfWeek.valueOf("MONDAY"),
  //   val time: Time = Time.valueOf("00:00:00"),
-    val deleteWhenDone: Boolean = false,
+   // val deleteWhenDone: Boolean = false,
     val complete: Boolean = false,
     val sortType: SortType = SortType.Title
 )

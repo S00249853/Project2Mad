@@ -12,7 +12,8 @@ fun ScheduleScreen() {
     Box(modifier = Modifier.fillMaxSize())
     {
         Column() {
-
+            TopUi()
+            NameSection("Schedule")
         }
     }
 }

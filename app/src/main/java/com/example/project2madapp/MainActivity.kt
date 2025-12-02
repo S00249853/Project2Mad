@@ -48,6 +48,7 @@ import com.example.project2madapp.TaskScreen
 import com.example.project2madapp.TasksScreen
 import com.example.project2madapp.ui.theme.Project2MadAppTheme
 
+@Suppress("UNCHECKED_CAST")
 public class MainActivity : ComponentActivity() {
 private  val  db by lazy{
     Room.databaseBuilder(
@@ -90,9 +91,9 @@ val navController = rememberNavController()
 fun Navigation(navController: NavHostController,
                state: TaskState,
                onEvent: (TaskEvent) -> Unit){
-    NavHost(navController = navController, startDestination = "tasks"){
+    NavHost(navController = navController, startDestination = "home"){
         composable("home"){
-              HomeScreen()
+              HomeScreen(state, onEvent)
         }
         composable("tasks"){
             TasksScreen(state = state, onEvent = onEvent, navController = navController)
@@ -107,7 +108,7 @@ fun Navigation(navController: NavHostController,
         //    TaskScreen()
         }
         composable("create"){
-        //    CreateEditScreen()
+       CreateEditScreen(state, onEvent, navController)
         }
     }
 }

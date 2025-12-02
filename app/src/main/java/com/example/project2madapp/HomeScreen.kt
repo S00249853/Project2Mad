@@ -35,11 +35,13 @@ import java.time.LocalDate
 import java.util.TimeZone
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen( state: TaskState,
+                onEvent: (TaskEvent) -> Unit ){
     Box(modifier = Modifier.fillMaxSize())
     {
         Column() {
             TopUi()
+            TaskList(state, onEvent)
         }
     }
 }
@@ -66,18 +68,20 @@ horizontalArrangement = Arrangement.Center,
 @Composable
 fun TaskList(
     state: TaskState,
-    onEvent: (TaskEvent) -> Unit,
-    onGetEvent: (TaskEvent) -> List<Task>
+    onEvent: (TaskEvent) -> Unit
 ) {
-    val today = LocalDate.now().dayOfWeek
+
     Text("Todays Tasks",
         fontSize = 64.sp)
     LazyColumn()
     {
+        val today = LocalDate.now().dayOfWeek
+items(state.tasks.size) {
+    if (state.tasks[it].day == today)
+    {
+        TaskItem(state.tasks[it])
+    }
 
-val tasks = onGetEvent(TaskEvent.GetDay(today))
-items(tasks.size) {
-    TaskItem(tasks[it])
 }
 
     }
@@ -85,10 +89,17 @@ items(tasks.size) {
         fontSize = 64.sp)
     LazyColumn()
     {
+        var today = LocalDate.now().dayOfWeek + 1
+        if (today.value == 8)
+        {
+            today = DayOfWeek.MONDAY
+        }
+        items(state.tasks.size) {
+            if (state.tasks[it].day == today)
+            {
+                TaskItem(state.tasks[it])
+            }
 
-        val tasks = onGetEvent(TaskEvent.GetDay(today + 1))
-        items(tasks.size) {
-            TaskItem(tasks[it])
         }
     }
 }
@@ -111,7 +122,7 @@ fun BottomNavigationUi(navController: NavController)
                 navController.navigate("home")
             },
             modifier = Modifier
-            .background(Color.Red))
+           )
         {
             Text("Home")
         }
@@ -120,7 +131,7 @@ fun BottomNavigationUi(navController: NavController)
                 navController.navigate("tasks")
             },
             modifier = Modifier
-                .background(Color.Red))
+        )
         {
             Text("Tasks")
         }
@@ -129,7 +140,7 @@ fun BottomNavigationUi(navController: NavController)
                 navController.navigate("schedule")
             },
             modifier = Modifier
-                .background(Color.Red))
+                )
         {
             Text("Schedule")
         }
@@ -138,7 +149,7 @@ fun BottomNavigationUi(navController: NavController)
                 navController.navigate("contact")
             },
             modifier = Modifier
-                .background(Color.Red))
+                )
         {
             Text("Contact")
         }

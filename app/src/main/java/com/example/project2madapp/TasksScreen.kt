@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.room.Index
 import com.example.project2madapp.TopUi
+import org.intellij.lang.annotations.JdkConstants
 
 @Composable
 fun TasksScreen(
@@ -42,7 +43,18 @@ fun TasksScreen(
         Column() {
             TopUi()
             OrderSection(state, onEvent)
-            TaskList(state, navController)
+            TaskList(state)
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {  Button(onClick =
+                {navController.navigate("create")
+                }
+            ) {
+                Text("Add Task")
+            }}
+
         }
 
 
@@ -66,14 +78,16 @@ fun OrderSection(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(15.dp)
     ) {
-        Text("Tasks", fontSize = 80.sp)
-        Button(onClick = { isExpanded = !isExpanded })
+        Text("Tasks", fontSize = 64.sp)
+        Button(onClick = { isExpanded = !isExpanded },
+            modifier = Modifier.padding(start = 80.dp)
+        )
         {
             Text("Order")
         }
        DropdownMenu(expanded = isExpanded, onDismissRequest = {isExpanded = false})
         {
-            SortType.values().forEach { sortType ->
+            SortType.entries.forEach { sortType ->
                 DropdownMenuItem(text = {sortType.toString()},
                     onClick = { onEvent(TaskEvent.SortTasks(sortType))})
             }
@@ -83,8 +97,7 @@ fun OrderSection(
 
 @Composable
 fun TaskList(
-    state: TaskState,
-    navController: NavController
+    state: TaskState
 )
 {
     LazyColumn(modifier = Modifier,
@@ -94,9 +107,5 @@ fun TaskList(
             TaskItem(state.tasks[it])
         }
     }
-    Button(onClick =
-        {navController.navigate("create")}
-            ) {
-        Text("Add Task")
-    }
+
 }

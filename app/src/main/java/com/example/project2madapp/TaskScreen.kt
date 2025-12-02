@@ -13,7 +13,8 @@ fun TaskScreen(task: Task) {
     Box(modifier = Modifier.fillMaxSize())
     {
         Column() {
-
+            TopUi()
+            NameSection(task.name)
         }
     }
 }

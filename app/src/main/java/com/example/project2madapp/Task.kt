@@ -22,7 +22,7 @@ data class Task(
     val category: Categories,
     val day: DayOfWeek,
   //  val time: Time,
-    val deleteWhenDone: Boolean,
+   // val deleteWhenDone: Boolean,
     val complete: Boolean
 
 )

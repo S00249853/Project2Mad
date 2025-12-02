@@ -42,7 +42,7 @@ private val state = MutableStateFlow(TaskState())
                  val category = State.value.category
                  val day = State.value.day
                //  val time = State.value.time
-                 val delete = State.value.deleteWhenDone
+                // val delete = State.value.deleteWhenDone
                  val complete = State.value.complete
 
                  if (name.isBlank() || description.isBlank())
@@ -56,13 +56,12 @@ private val state = MutableStateFlow(TaskState())
                      category = category,
                      day = day,
                     // time = time,
-                     deleteWhenDone = delete,
+                //     deleteWhenDone = delete,
                      complete = complete
                  )
                  viewModelScope.launch {
                      dao.UpsertTask(task)
                  }
-
              }
              is TaskEvent.SetCategory -> {
                  state.update { it.copy(
@@ -79,11 +78,11 @@ private val state = MutableStateFlow(TaskState())
                      day = event.day
                  ) }
              }
-             is TaskEvent.SetDelete -> {
-                 state.update { it.copy(
-                     deleteWhenDone = event.delete
-                 ) }
-             }
+           //  is TaskEvent.SetDelete -> {
+           //      state.update { it.copy(
+           //          deleteWhenDone = event.delete
+          //       ) }
+           //  }
              is TaskEvent.SetDescription -> {
                  state.update { it.copy(
                      description = event.description

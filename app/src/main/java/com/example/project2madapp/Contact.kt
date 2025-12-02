@@ -12,7 +12,8 @@ fun ContactScreen() {
     Box(modifier = Modifier.fillMaxSize())
     {
         Column() {
-
+            TopUi()
+                NameSection("Contact")
         }
     }
 }

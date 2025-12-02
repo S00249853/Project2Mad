@@ -15,7 +15,7 @@ sealed interface TaskEvent {
     data class SetCategory(val category: Categories): TaskEvent
     data class SetDay(val day: DayOfWeek): TaskEvent
    // data class SetTime(val time: Time): TaskEvent
-    data class SetDelete(val delete: Boolean): TaskEvent
+    //data class SetDelete(val delete: Boolean): TaskEvent
     data class SetComplete(val complete: Boolean): TaskEvent
     data class  SortTasks(val sortType: SortType): TaskEvent
 

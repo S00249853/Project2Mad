@@ -28,5 +28,5 @@ interface TaskDao {
     fun GetTasksOrderedByDone(): Flow<List<Task>>
 
     @Query("SELECT * FROM task WHERE day = :day")
-    fun GetTasksForDay(day: DayOfWeek): List<Task>
+    fun GetTasksForDay(day: DayOfWeek): Flow<List<Task>>
 }
