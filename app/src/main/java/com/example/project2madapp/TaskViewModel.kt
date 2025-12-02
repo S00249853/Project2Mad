@@ -56,7 +56,7 @@ private val state = MutableStateFlow(TaskState())
                      category = category,
                      day = day,
                     // time = time,
-                //     deleteWhenDone = delete,
+                     deleteWhenDone = false,
                      complete = complete
                  )
                  viewModelScope.launch {
