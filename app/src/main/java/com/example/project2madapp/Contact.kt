@@ -26,12 +26,12 @@ fun ContactScreen() {
 
 @Composable
 fun ContactDetails(){
-    Text("To report any bugs, please reach out to us here:",fontSize = 16.sp, modifier = Modifier.padding(15.dp))
+    Text("To report any bugs, please reach out to us here:",fontSize = 30.sp, modifier = Modifier.padding(20.dp))
 
-    Column(modifier = Modifier.padding(15.dp)) {
+    Column() {
 
-        Text("Email: sample@gmail.com",fontSize = 16.sp, modifier = Modifier.padding(15.dp))
-        Text("Phone: 0965432345",fontSize = 16.sp, modifier = Modifier.padding(15.dp))
+        Text("Email: sample@gmail.com",fontSize = 30.sp, modifier = Modifier.padding(20.dp))
+        Text("Phone: 0965432345",fontSize = 30.sp, modifier = Modifier.padding(20.dp))
 
     }
 
