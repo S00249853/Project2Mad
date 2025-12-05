@@ -4,9 +4,12 @@ import android.media.Image
 import android.widget.Button
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -36,12 +40,13 @@ import java.util.TimeZone
 
 @Composable
 fun HomeScreen( state: TaskState,
-                onEvent: (TaskEvent) -> Unit ){
+                onEvent: (TaskEvent) -> Unit,
+                navController: NavController){
     Box(modifier = Modifier.fillMaxSize())
     {
         Column() {
             TopUi()
-            TaskList(state, onEvent)
+            TaskList(state, onEvent, navController)
         }
     }
 }
@@ -68,26 +73,33 @@ horizontalArrangement = Arrangement.Center,
 @Composable
 fun TaskList(
     state: TaskState,
-    onEvent: (TaskEvent) -> Unit
+    onEvent: (TaskEvent) -> Unit,
+    navController: NavController
 ) {
 
     Text("Todays Tasks",
-        fontSize = 64.sp)
-    LazyColumn()
+        fontSize = 40.sp,
+        modifier = Modifier.padding(15.dp))
+    LazyColumn(contentPadding = PaddingValues(
+        horizontal = 16.dp, vertical = 16.dp
+    ))
     {
         val today = LocalDate.now().dayOfWeek
 items(state.tasks.size) {
     if (state.tasks[it].day == today)
     {
-        TaskItem(state.tasks[it])
+        TaskItem(state.tasks[it], onEvent,navController)
     }
 
 }
 
     }
     Text("Tommorows Tasks",
-        fontSize = 64.sp)
-    LazyColumn()
+        fontSize = 40.sp,
+        modifier = Modifier.padding(15.dp))
+    LazyColumn(contentPadding = PaddingValues(
+        horizontal = 16.dp, vertical = 16.dp
+    ))
     {
         var today = LocalDate.now().dayOfWeek + 1
         if (today.value == 8)
@@ -97,7 +109,9 @@ items(state.tasks.size) {
         items(state.tasks.size) {
             if (state.tasks[it].day == today)
             {
-                TaskItem(state.tasks[it])
+                TaskItem(state.tasks[it],
+                    onEvent,
+                    navController)
             }
 
         }
@@ -160,7 +174,9 @@ fun BottomNavigationUi(navController: NavController)
 
 @Composable
 fun TaskItem(
-    task: Task
+    task: Task,
+    onEvent: (TaskEvent) -> Unit,
+    navController: NavController
 )
 {
     Row(
@@ -175,20 +191,18 @@ fun TaskItem(
 
     )
     {
-         Text(task.name)
+         Text(task.name,
+             modifier = Modifier.clickable{navController.navigate("task/${task.id}")}
+
+             )
+
+
         Text(task.day.toString())
 
-        Icon(if(task.complete) {
-            painterResource(id = com.example.project2madapp.R.drawable.baseline_check_24)
+        Icon(  modifier = Modifier.clickable{onEvent(TaskEvent.DeleteTask(task))},
 
-        }
-            else{
-            painterResource(id = com.example.project2madapp.R.drawable.baseline_close_24)
-        },
-            contentDescription = ""
-
+            painter = painterResource(id = com.example.project2madapp.R.drawable.baseline_close_24), contentDescription = ""
         )
-
         Icon(painterResource(id = com.example.project2madapp.R.drawable.outline_edit_24), contentDescription = "")
     }
 }

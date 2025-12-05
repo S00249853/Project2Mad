@@ -36,9 +36,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.room.Room
 
 import com.example.project2madapp.ContactScreen
@@ -93,19 +95,28 @@ fun Navigation(navController: NavHostController,
                onEvent: (TaskEvent) -> Unit){
     NavHost(navController = navController, startDestination = "home"){
         composable("home"){
-              HomeScreen(state, onEvent)
+              HomeScreen(state, onEvent, navController)
         }
         composable("tasks"){
             TasksScreen(state = state, onEvent = onEvent, navController = navController)
         }
         composable("schedule"){
-            ScheduleScreen()
+            ScheduleScreen(state, onEvent,navController)
         }
         composable("contact"){
             ContactScreen()
         }
-        composable("task"){
-        //    TaskScreen()
+        composable("task" + "/{id}",
+            arguments = listOf(
+                navArgument("id")
+                {
+                    type = NavType.IntType
+                    defaultValue = 1
+                }
+            )
+            ){
+            entry ->
+            TaskScreen(id = entry.arguments!!.getInt("id"), state)
         }
         composable("create"){
        CreateEditScreen(state, onEvent, navController)

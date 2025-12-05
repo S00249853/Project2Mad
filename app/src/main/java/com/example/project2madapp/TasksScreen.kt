@@ -43,7 +43,7 @@ fun TasksScreen(
         Column() {
             TopUi()
             OrderSection(state, onEvent)
-            TaskList(state)
+            TasksList(state, onEvent, navController)
             Row(
                 modifier = Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.Center,
@@ -74,6 +74,10 @@ fun OrderSection(
         mutableStateOf(false)
     }
 
+    var SelectedValue by remember {
+        mutableStateOf("Order")
+    }
+
     Row(horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(15.dp)
@@ -83,28 +87,32 @@ fun OrderSection(
             modifier = Modifier.padding(start = 80.dp)
         )
         {
-            Text("Order")
+            Text(SelectedValue)
         }
        DropdownMenu(expanded = isExpanded, onDismissRequest = {isExpanded = false})
         {
             SortType.entries.forEach { sortType ->
-                DropdownMenuItem(text = {sortType.toString()},
-                    onClick = { onEvent(TaskEvent.SortTasks(sortType))})
+                DropdownMenuItem(text = {Text(sortType.toString())},
+                    onClick = { onEvent(TaskEvent.SortTasks(sortType))
+                    SelectedValue = sortType.toString()
+                    })
             }
         }
     }
 }
 
 @Composable
-fun TaskList(
-    state: TaskState
+fun TasksList(
+    state: TaskState,
+    onEvent: (TaskEvent) -> Unit,
+    navController: NavController
 )
 {
     LazyColumn(modifier = Modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(state.tasks.size){
-            TaskItem(state.tasks[it])
+            TaskItem(state.tasks[it],onEvent, navController)
         }
     }
 

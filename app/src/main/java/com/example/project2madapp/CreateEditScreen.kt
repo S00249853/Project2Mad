@@ -15,6 +15,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -53,7 +54,7 @@ fun NameSection(
 name: String
 )
 {
-    Row(horizontalArrangement = Arrangement.SpaceBetween,
+    Row(horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(15.dp)
     ) {
@@ -66,7 +67,22 @@ fun AddTask(state: TaskState,
             onEvent: (TaskEvent) -> Unit,
             navController: NavController){
 
-    var checked1 by remember {mutableStateOf(true)}
+    var isExpanded by remember{
+        mutableStateOf(false)
+    }
+
+    var isExpanded2 by remember{
+        mutableStateOf(false)
+    }
+
+    var SelectedText by remember {
+        mutableStateOf("Day")
+    }
+
+
+    var SelectedText2 by remember {
+        mutableStateOf("Category")
+    }
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         TextField(
@@ -89,27 +105,39 @@ fun AddTask(state: TaskState,
             }
         )
 
-        TextField(
-            value = state.day.toString(),
-            onValueChange = {
-                onEvent(TaskEvent.SetDay(DayOfWeek.valueOf(it)))
-            },
-            placeholder = {
-                Text(text = "Description")
+
+       Button(onClick = { isExpanded = !isExpanded }
+       )
+        {
+            Text(SelectedText)
+       }
+        DropdownMenu(expanded = isExpanded, onDismissRequest = {isExpanded = false})
+        {
+            DayOfWeek.entries.forEach { day ->
+                DropdownMenuItem(text = {Text(day.toString())},
+                    onClick = {
+                        onEvent(TaskEvent.SetDay(day))
+                        SelectedText = day.toString()
+                    })
             }
+        }
+        Button(onClick = { isExpanded2 = !isExpanded2 }
         )
-        TextField(
-            value = state.category.toString(),
-            onValueChange = {
-                onEvent(TaskEvent.SetCategory(Categories.valueOf(it)))
-            },
-            placeholder = {
-                Text(text = "Description")
+        {
+            Text(SelectedText2)
+        }
+        DropdownMenu(expanded = isExpanded2, onDismissRequest = {isExpanded2 = false})
+        {
+            Categories.entries.forEach { category ->
+                DropdownMenuItem(text = {Text(category.toString())},
+                    onClick = { onEvent(TaskEvent.SetCategory(category))
+                    SelectedText2 = category.toString()})
             }
-        )
+        }
         Button(modifier = Modifier.padding(20.dp), onClick =
             {
                 onEvent(TaskEvent.SaveTask)
+                navController.navigate("tasks")
             }
 
         )
